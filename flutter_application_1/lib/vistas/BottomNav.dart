@@ -3,7 +3,7 @@ import 'package:flutter_application_1/vistas/Pagina1.dart';
 import 'package:flutter_application_1/vistas/Pagina2.dart';
 import 'package:flutter_application_1/vistas/Pagina3.dart';
 import 'package:flutter_application_1/vistas/Pagina4.dart';
-import 'package:flutter_application_1/vistas/HomeView.dart';
+import 'package:flutter_application_1/vistas/homeView.dart';
 
 class Bottomnav extends StatefulWidget {
   const Bottomnav({super.key});
@@ -14,7 +14,7 @@ class Bottomnav extends StatefulWidget {
 
 class _BottomnavState extends State<Bottomnav> {
 int _currentIndex = 2;
-List<Map<String, dynamic>> _paginas = [
+final List<Map<String, dynamic>> _paginas = [
   {'pagina': Pagina1(), 'texto': 'Pagina 1', 'color':0xffd80111, 'icono': Icons.keyboard},
   {'pagina': Pagina2(), 'texto': 'Pagina 2', 'color':0xffd80133, 'icono': Icons.mouse},
   {'pagina': HomeView(), 'texto': 'Home', 'color':0xffd80100, 'icono': Icons.home},
