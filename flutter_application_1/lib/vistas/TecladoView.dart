@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/models/product.dart';
+import 'package:flutter_application_1/models/tecladosProd.dart';
 
-class Pagina1 extends StatelessWidget {
-  const Pagina1({super.key});
+class TecladoView extends StatelessWidget {
+  const TecladoView({super.key});
 
   @override
   Widget build(BuildContext context) {
