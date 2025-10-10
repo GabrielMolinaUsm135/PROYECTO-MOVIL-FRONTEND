@@ -21,20 +21,20 @@ final List<Producto> listaProductos = [
     nombre: 'Teclado Razer Huntsman Mini',
     descripcion: 'Teclado mecánico compacto 65%, switches ópticos. Retroiluminación RGB.',
     precio: 120.000,
-    imageAsset: 'assets/images/razer.png',
+    imageAsset: 'assets/images/teclados/razer.png',
   ),
   Producto(
     id: 'k2',
     nombre: 'Teclado Redragon Kumara',
     descripcion: 'Tenkeyless con macros y diseño resistente.',
     precio: 45.000,
-    imageAsset: 'assets/images/reddragon.png',
+    imageAsset: 'assets/images/teclados/reddragon.png',
   ),
   Producto(
     id: 'k3',
     nombre: 'Teclado Logitech G213',
     descripcion: 'Perfil bajo, switches silenciosos y diseño elegante para oficina.',
     precio: 75.000,
-    imageAsset: 'assets/images/logitech.png',
+    imageAsset: 'assets/images/teclados/logitech.png',
   ),
 ];

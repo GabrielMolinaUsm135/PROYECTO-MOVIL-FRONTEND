@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/vistas/Mouse.dart';
-import 'package:flutter_application_1/vistas/Pagina3.dart';
-import 'package:flutter_application_1/vistas/Pagina4.dart';
+import 'package:flutter_application_1/vistas/AudifonosView.dart';
+import 'package:flutter_application_1/vistas/MouseView.dart';
+import 'package:flutter_application_1/vistas/MonitorView.dart';
 import 'package:flutter_application_1/vistas/TecladoView.dart';
 import 'package:flutter_application_1/vistas/homeView.dart';
 
@@ -15,11 +15,11 @@ class Bottomnav extends StatefulWidget {
 class _BottomnavState extends State<Bottomnav> {
 int _currentIndex = 2;
 final List<Map<String, dynamic>> _paginas = [
-  {'pagina': TabTeclado(), 'texto': 'Pagina 1', 'color':0xffd80111, 'icono': Icons.keyboard},
-  {'pagina': Mouse(), 'texto': 'Pagina 2', 'color':0xffd80133, 'icono': Icons.mouse},
-  {'pagina': HomeView(), 'texto': 'Home', 'color':0xffd80100, 'icono': Icons.home},
-  {'pagina': Pagina3(), 'texto': 'Pagina 3', 'color':0xffd80144, 'icono': Icons.tv},
-  {'pagina': Pagina4(), 'texto': 'Pagina 4', 'color':0xffd80163, 'icono': Icons.headphones},
+  {'pagina': TabTeclado(), 'texto': 'Teclados', 'color':0xffd80111, 'icono': Icons.keyboard},
+  {'pagina': TabMouse(), 'texto': 'Mouses', 'color':0xffd80133, 'icono': Icons.mouse},
+  {'pagina': HomeView(), 'texto': 'Inicio', 'color':0xffd80100, 'icono': Icons.home},
+  {'pagina': TabMonitor(), 'texto': 'Monitores', 'color':0xffd80144, 'icono': Icons.tv},
+  {'pagina': TabAudifonos(), 'texto': 'Audifonos', 'color':0xffd80163, 'icono': Icons.headphones},
 ];
 
   @override

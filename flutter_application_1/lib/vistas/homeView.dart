@@ -7,7 +7,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hola 1'),
+        title: Text('Bienvenidos a TechStore!'),
       ),
     );
   }

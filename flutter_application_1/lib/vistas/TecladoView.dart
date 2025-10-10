@@ -27,6 +27,8 @@ class _TabTecladoState extends State<TabTeclado> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 16),
                         Text('Cargando...'),
                       ],
                     ),
