@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/vistas/Pagina2.dart';
+import 'package:flutter_application_1/vistas/Mouse.dart';
 import 'package:flutter_application_1/vistas/Pagina3.dart';
 import 'package:flutter_application_1/vistas/Pagina4.dart';
 import 'package:flutter_application_1/vistas/TecladoView.dart';
@@ -16,7 +16,7 @@ class _BottomnavState extends State<Bottomnav> {
 int _currentIndex = 2;
 final List<Map<String, dynamic>> _paginas = [
   {'pagina': TabTeclado(), 'texto': 'Pagina 1', 'color':0xffd80111, 'icono': Icons.keyboard},
-  {'pagina': Pagina2(), 'texto': 'Pagina 2', 'color':0xffd80133, 'icono': Icons.mouse},
+  {'pagina': Mouse(), 'texto': 'Pagina 2', 'color':0xffd80133, 'icono': Icons.mouse},
   {'pagina': HomeView(), 'texto': 'Home', 'color':0xffd80100, 'icono': Icons.home},
   {'pagina': Pagina3(), 'texto': 'Pagina 3', 'color':0xffd80144, 'icono': Icons.tv},
   {'pagina': Pagina4(), 'texto': 'Pagina 4', 'color':0xffd80163, 'icono': Icons.headphones},
