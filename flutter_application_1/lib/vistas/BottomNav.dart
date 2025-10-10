@@ -15,7 +15,7 @@ class Bottomnav extends StatefulWidget {
 class _BottomnavState extends State<Bottomnav> {
 int _currentIndex = 2;
 final List<Map<String, dynamic>> _paginas = [
-  {'pagina': TabViewTeclado(), 'texto': 'Pagina 1', 'color':0xffd80111, 'icono': Icons.keyboard},
+  {'pagina': TabTeclado(), 'texto': 'Pagina 1', 'color':0xffd80111, 'icono': Icons.keyboard},
   {'pagina': Pagina2(), 'texto': 'Pagina 2', 'color':0xffd80133, 'icono': Icons.mouse},
   {'pagina': HomeView(), 'texto': 'Home', 'color':0xffd80100, 'icono': Icons.home},
   {'pagina': Pagina3(), 'texto': 'Pagina 3', 'color':0xffd80144, 'icono': Icons.tv},
