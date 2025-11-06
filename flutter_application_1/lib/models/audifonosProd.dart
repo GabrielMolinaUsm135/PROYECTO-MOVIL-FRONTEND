@@ -26,7 +26,7 @@ final List<Audifono> listaAudifonos = [
     id: 'A2',
     nombre: 'Razer Kraken',
     descripcion: 'Modo manos libres incluido, Con cancelación de rui...',
-    precio: 299000,
+    precio: 80000,
     imageAsset: 'assets/images/Audifonos/razerkraken.png',
   ),
   Audifono(
