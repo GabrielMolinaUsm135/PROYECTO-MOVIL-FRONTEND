@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class TecladosProvider {
-  final apiUrl = 'http://192.168.56.1:3000/api/teclados';
+  final apiUrl = 'http://10.223.240.70:3000/api/teclados';
 
   Future<List<dynamic>> getTeclados() async {
     var url = Uri.parse(apiUrl);
