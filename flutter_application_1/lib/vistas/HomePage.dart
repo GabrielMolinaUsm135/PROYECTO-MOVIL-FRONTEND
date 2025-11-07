@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_colors.dart';
+import 'package:flutter_application_1/vistas/vertical.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -17,9 +18,69 @@ class HomePage extends StatelessWidget {
           onSelected: (value) {
             if (value == 'logout') {
               Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+            } else if (value == 'Abrir') {
+              showGeneralDialog(
+                context: context,
+                barrierDismissible: true,
+                barrierLabel: 'Menú',
+                transitionDuration: const Duration(milliseconds: 300),
+                pageBuilder: (context, anim1, anim2) {
+                  return Align(
+                    alignment: Alignment.centerRight,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: SizedBox(
+                        width: 320,
+                        height: MediaQuery.of(context).size.height,
+                        child: SafeArea(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                AppBar(
+                                  backgroundColor: primaryColor,
+                                  title: const Text('Menú'),
+                                  automaticallyImplyLeading: false,
+                                  actions: [
+                                    IconButton(
+                                      icon: const Icon(Icons.logout),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pushNamedAndRemoveUntil(
+                                            context, '/', (route) => false);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.close),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ],
+                                ),
+                                const Expanded(child: Verticaltab()),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                transitionBuilder: (context, a1, a2, child) {
+                  return SlideTransition(
+                    position:
+                        Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+                            .animate(a1),
+                    child: child,
+                  );
+                },
+              );
             }
           },
           itemBuilder: (context) => [
+            const PopupMenuItem<String>(
+              value: 'Abrir',
+              child: Text('Abrir menú'),
+            ),
             const PopupMenuItem<String>(
               value: 'logout',
               child: Text('Cerrar sesión'),
