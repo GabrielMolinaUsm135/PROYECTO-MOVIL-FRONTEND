@@ -13,12 +13,11 @@ class HomePage extends StatelessWidget {
         backgroundColor: primaryColor,
         elevation: 0,
         automaticallyImplyLeading: false,
-        leading: PopupMenuButton<String>(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onSelected: (value) {
-            if (value == 'logout') {
-              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-            } else if (value == 'Abrir') {
+        leading: ButtonTheme(
+          minWidth: 0,
+          child: IconButton(
+            icon: const Icon(Icons.menu, color: Colors.white),
+            onPressed: () {
               showGeneralDialog(
                 context: context,
                 barrierDismissible: true,
@@ -74,18 +73,8 @@ class HomePage extends StatelessWidget {
                   );
                 },
               );
-            }
-          },
-          itemBuilder: (context) => [
-            const PopupMenuItem<String>(
-              value: 'Abrir',
-              child: Text('Abrir menú'),
-            ),
-            const PopupMenuItem<String>(
-              value: 'logout',
-              child: Text('Cerrar sesión'),
-            ),
-          ],
+            },
+          ),
         ),
         title: Row(
           children: const [
