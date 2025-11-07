@@ -3,6 +3,7 @@ import 'package:flutter_application_1/vistas/AudifonosView.dart';
 import 'package:flutter_application_1/vistas/MonitorView.dart';
 import 'package:flutter_application_1/vistas/MouseView.dart';
 import 'package:flutter_application_1/vistas/TecladoView.dart';
+import 'package:flutter_application_1/vistas/VistaPrueba.dart';
 
 class Verticaltab extends StatefulWidget {
   const Verticaltab({super.key});
@@ -56,25 +57,25 @@ class _VerticaltabState extends State<Verticaltab> {
                   if (categoria == 'Teclados') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const TabTeclado()),
+                      MaterialPageRoute(builder: (_) => const VistaPrueba()),
                     );
                   }
                   if (categoria == 'Mouses') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const TabMouse()),
+                      MaterialPageRoute(builder: (_) => const VistaPrueba()),
                     );
                   }
                   if (categoria == 'Monitores') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const TabMonitor()),
+                      MaterialPageRoute(builder: (_) => const VistaPrueba()),
                     );
                   }
                   if (categoria == 'Audifonos') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const TabAudifonos()),
+                      MaterialPageRoute(builder: (_) => const VistaPrueba()),
                     );
                   }
                 },
