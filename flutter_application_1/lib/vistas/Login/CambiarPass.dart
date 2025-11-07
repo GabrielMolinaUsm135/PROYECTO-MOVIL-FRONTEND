@@ -10,7 +10,7 @@ class CambiarPass extends StatelessWidget {
         title: const Text('Cambiar Contraseña'),
       ),
       body: const Center(
-        child: Text('Pantalla de Cambiar Contraseña (en desarrollo)'),
+        child: Text('Pantalla de Cambiar Contraseña'),
       ),
     );
   }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/vistas/AudifonosView.dart';
+import 'package:flutter_application_1/vistas/Tabs/AudifonosView.dart';
 import 'package:flutter_application_1/vistas/HomePage.dart';
-import 'package:flutter_application_1/vistas/MonitorView.dart';
-import 'package:flutter_application_1/vistas/MouseView.dart';
-import 'package:flutter_application_1/vistas/TecladoView.dart';
+import 'package:flutter_application_1/vistas/Tabs/MonitorView.dart';
+import 'package:flutter_application_1/vistas/Tabs/MouseView.dart';
 import 'package:flutter_application_1/vistas/VistaPrueba.dart';
 
 class Verticaltab extends StatefulWidget {
