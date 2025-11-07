@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/vistas/AudifonosView.dart';
+import 'package:flutter_application_1/vistas/HomePage.dart';
 import 'package:flutter_application_1/vistas/MonitorView.dart';
 import 'package:flutter_application_1/vistas/MouseView.dart';
 import 'package:flutter_application_1/vistas/TecladoView.dart';
@@ -15,7 +16,7 @@ class Verticaltab extends StatefulWidget {
 class _VerticaltabState extends State<Verticaltab> {
   int selectedIndex = 0;
   late final PageController _pageController;
-  List<String> Categoria = ['Teclados', 'Mouses', 'Monitores', 'Audifonos'];
+  List<String> Categoria = ['Inicio', 'Teclados', 'Mouses', 'Monitores', 'Audifonos'];
 
   @override
   void initState() {
@@ -36,7 +37,7 @@ class _VerticaltabState extends State<Verticaltab> {
         SizedBox(
           width: 100,
           child: ListView.separated(
-            itemCount: 4,
+            itemCount: Categoria.length,
             separatorBuilder: (BuildContext context, int index) {
               return const SizedBox(height: 5);
             },
@@ -54,6 +55,12 @@ class _VerticaltabState extends State<Verticaltab> {
                   });
 
                   final String categoria = Categoria[index];
+                  if (categoria == 'Inicio') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const HomePage()),
+                    );
+                  }
                   if (categoria == 'Teclados') {
                     Navigator.push(
                       context,
@@ -63,19 +70,19 @@ class _VerticaltabState extends State<Verticaltab> {
                   if (categoria == 'Mouses') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const VistaPrueba()),
+                      MaterialPageRoute(builder: (_) => const TabMouse()),
                     );
                   }
                   if (categoria == 'Monitores') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const VistaPrueba()),
+                      MaterialPageRoute(builder: (_) => const TabMonitor()),
                     );
                   }
                   if (categoria == 'Audifonos') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const VistaPrueba()),
+                      MaterialPageRoute(builder: (_) => const TabAudifonos()),
                     );
                   }
                 },
