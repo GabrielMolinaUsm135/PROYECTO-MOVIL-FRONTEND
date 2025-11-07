@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/vistas/AudifonosView.dart';
+import 'package:flutter_application_1/vistas/MonitorView.dart';
+import 'package:flutter_application_1/vistas/MouseView.dart';
+import 'package:flutter_application_1/vistas/TecladoView.dart';
 
 class Verticaltab extends StatefulWidget {
   const Verticaltab({super.key});
@@ -10,6 +14,7 @@ class Verticaltab extends StatefulWidget {
 class _VerticaltabState extends State<Verticaltab> {
   int selectedIndex = 0;
   late final PageController _pageController;
+  List<String> Categoria = ['Teclados', 'Mouses', 'Monitores', 'Audifonos'];
 
   @override
   void initState() {
@@ -37,6 +42,7 @@ class _VerticaltabState extends State<Verticaltab> {
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                 onTap: () {
+                  // actualiza la selección visual
                   setState(() {
                     selectedIndex = index;
                     _pageController.animateToPage(
@@ -45,6 +51,32 @@ class _VerticaltabState extends State<Verticaltab> {
                       curve: Curves.easeInOut,
                     );
                   });
+
+                  final String categoria = Categoria[index];
+                  if (categoria == 'Teclados') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const TabTeclado()),
+                    );
+                  }
+                  if (categoria == 'Mouses') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const TabMouse()),
+                    );
+                  }
+                  if (categoria == 'Monitores') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const TabMonitor()),
+                    );
+                  }
+                  if (categoria == 'Audifonos') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const TabAudifonos()),
+                    );
+                  }
                 },
                 child: Container(
                   child: Row(
@@ -66,7 +98,7 @@ class _VerticaltabState extends State<Verticaltab> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 5),
-                            child: Text('Titulo $index'),
+                            child: Text('${Categoria[index]}'),
                           ),
                         ),
                       )
@@ -85,13 +117,8 @@ class _VerticaltabState extends State<Verticaltab> {
                 selectedIndex = index;
               });
             },
-            children: const [
-              Center(child: Text('Pagina 1')),
-              Center(child: Text('Pagina 2')),
-              Center(child: Text('Pagina 3')),
-              Center(child: Text('Pagina 4')),
-            ],
-          ),
+            
+          )
         )
       ],
     );
