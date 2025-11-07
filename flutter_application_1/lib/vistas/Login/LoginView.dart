@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_colors.dart';
-import 'package:flutter_application_1/vistas/HomePage.dart';
+ 
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -22,24 +22,7 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
-  void _handleSubmit() {
-    setState(() => _error = null);
-    if (!_formKey.currentState!.validate()) return;
-
-    final email = _emailController.text.trim();
-    final password = _passwordController.text;
-
-    if (email.isEmpty || password.isEmpty) {
-      setState(() => _error = 'Debe completar todos los campos');
-      return;
-    }
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage()),
-    );
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,12 +75,28 @@ class _LoginViewState extends State<LoginView> {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: _handleSubmit,
+                              onPressed: () => Navigator.pushNamed(context, '/home'),
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 12.0),
                                 child: Text('Entrar'),
                               ),
                             ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: () => Navigator.pushNamed(context, '/cambiar-pass'),
+                                style: TextButton.styleFrom(foregroundColor: primaryColor),
+                                child: const Text('Cambiar contraseña'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pushNamed(context, '/crear-cuenta'),
+                                style: TextButton.styleFrom(foregroundColor: primaryColor),
+                                child: const Text('Crear cuenta'),
+                              ),
+                            ],
                           ),
                           if (_error != null) ...[
                             const SizedBox(height: 12),
