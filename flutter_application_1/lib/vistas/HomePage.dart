@@ -25,7 +25,8 @@ class HomePage extends StatelessWidget {
                 transitionDuration: const Duration(milliseconds: 300),
                 pageBuilder: (context, anim1, anim2) {
                   return Align(
-                    alignment: Alignment.centerRight,
+                    // Mostrar desde la izquierda hacia la derecha
+                    alignment: Alignment.centerLeft,
                     child: Material(
                       color: Colors.transparent,
                       child: SizedBox(
@@ -65,10 +66,10 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 transitionBuilder: (context, a1, a2, child) {
+                  // Animación: entra desde la izquierda
                   return SlideTransition(
-                    position:
-                        Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
-                            .animate(a1),
+                    position: Tween<Offset>(begin: const Offset(-1, 0), end: Offset.zero)
+                        .animate(a1),
                     child: child,
                   );
                 },
