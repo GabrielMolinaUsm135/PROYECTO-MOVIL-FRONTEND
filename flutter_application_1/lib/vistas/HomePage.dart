@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants/app_colors.dart';
+import 'package:flutter_application_1/vistas/Carrito/carritoView.dart';
 import 'package:flutter_application_1/vistas/vertical.dart';
 
 class HomePage extends StatelessWidget {
@@ -25,7 +26,6 @@ class HomePage extends StatelessWidget {
                 transitionDuration: const Duration(milliseconds: 300),
                 pageBuilder: (context, anim1, anim2) {
                   return Align(
-                    // Mostrar desde la izquierda hacia la derecha
                     alignment: Alignment.centerLeft,
                     child: Material(
                       color: Colors.transparent,
@@ -98,7 +98,12 @@ class HomePage extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.shopping_cart, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CarritoView()),
+              );
+            },
           ),
         ],
       ),

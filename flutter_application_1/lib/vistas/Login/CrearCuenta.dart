@@ -10,17 +10,10 @@ class CrearCuenta extends StatefulWidget {
 }
 
 class _CrearCuentaState extends State<CrearCuenta> {
-  final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String? _error;
 
   @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +52,6 @@ class _CrearCuentaState extends State<CrearCuenta> {
                     ),
                     const SizedBox(height: 18),
                     Form(
-                      key: _formKey,
                       child: Column(
                         children: [
                           TextFormField(
