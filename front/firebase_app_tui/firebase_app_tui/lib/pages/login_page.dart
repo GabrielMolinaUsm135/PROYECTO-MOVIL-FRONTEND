@@ -1,4 +1,5 @@
 import 'package:firebase_app_tui/pages/productos_page.dart';
+import 'package:firebase_app_tui/vistas/HomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
@@ -68,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
             sp.setString('user_email', emailCtrl.text.trim());
 
             MaterialPageRoute route = MaterialPageRoute(
-              builder: (context) => ProductosPage(),
+              builder: (context) => HomePage(),
             );
             Navigator.pushReplacement(context, route);
           } on FirebaseAuthException catch (ex) {
