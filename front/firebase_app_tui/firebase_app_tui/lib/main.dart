@@ -1,4 +1,5 @@
-import 'package:firebase_app_tui/pages/login_page.dart';
+
+import 'package:firebase_app_tui/vistas/login/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
