@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "50943240253",
+    "project_id": "gabriel-10-29",
+    "storage_bucket": "gabriel-10-29.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50943240253:android:e208336b96169da60f6254",
+        "android_client_info": {
+          "package_name": "cl.usm.appTUI"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWLgri_8_u7gtM3-DNvfa5sgmoS5oXdqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
