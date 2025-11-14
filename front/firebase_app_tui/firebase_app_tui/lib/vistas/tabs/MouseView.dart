@@ -94,7 +94,7 @@ class TabMouse extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Monitores', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+            const Text('Mouses', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
             const SizedBox(height: 12),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
