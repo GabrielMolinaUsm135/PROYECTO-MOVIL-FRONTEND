@@ -105,7 +105,7 @@ class _VerticaltabState extends State<Verticaltab> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 5),
-                            child: Text('${Categoria[index]}'),
+                            child: Text(Categoria[index]),
                           ),
                         ),
                       )

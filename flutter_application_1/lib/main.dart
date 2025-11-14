@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_application_1/vistas/Login/LoginView.dart';
 import 'package:flutter_application_1/vistas/Login/CambiarPass.dart';
 import 'package:flutter_application_1/vistas/Login/CrearCuenta.dart';
 import 'package:flutter_application_1/vistas/HomePage.dart';
 import 'package:flutter_application_1/constants/app_colors.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
   runApp(const MainApp());
 }
 

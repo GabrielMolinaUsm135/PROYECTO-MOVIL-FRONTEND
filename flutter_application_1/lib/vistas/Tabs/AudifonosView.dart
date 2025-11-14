@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/audifonosProd.dart';
 import 'package:flutter_application_1/vistas/vertical.dart';
 import 'package:flutter_application_1/constants/app_colors.dart';
+import 'package:flutter_application_1/constants/snackbar.dart';
 
 class TabAudifonos extends StatefulWidget {
   const TabAudifonos({super.key});
@@ -153,8 +154,49 @@ class _TabAudifonosState extends State<TabAudifonos> {
                           title: Text(m.nombre),
                           subtitle: Text(m.descripcion,
                               maxLines: 2, overflow: TextOverflow.ellipsis),
-                          trailing: Text('\$${_formatCLP(m.precio)}',
-                              style: const TextStyle(fontWeight: FontWeight.bold)),
+                          trailing: SizedBox(
+                            width: 160,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '\$${_formatCLP(m.precio)}',
+                                    textAlign: TextAlign.right,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                IconButton(
+                                  tooltip: 'Agregar al carrito',
+                                  icon: const Icon(Icons.add_shopping_cart, color: accentColor),
+                                  onPressed: () {
+                                    mostrarSnackbar(context, 'Agregado al carrito');
+
+                                    // Estructura para integrar con base de datos xd:
+                                    /*
+                                    PROBABLEMENTE falte algo, asi que fijarse al descomentar nombres de variables
+                                    // import 'package:cloud_firestore/cloud_firestore.dart'; arriba en imports
+                                    final uid = 'dev-user'; //id de usuario
+                                    final productoId = m.id ?? 'audifono_${index}';
+                                    await FirebaseFirestore.instance
+                                        .collection('usuarios')
+                                        .doc(uid)
+                                        .collection('carrito')
+                                        .doc(productoId)
+                                        .set({
+                                          'name': m.nombre,
+                                          'price': m.precio,
+                                          'qty': FieldValue.increment(1),
+                                          'image': m.imageAsset,
+                                          'createdAt': FieldValue.serverTimestamp(),
+                                        }, SetOptions(merge: true));
+                                    */
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
                         );
                       },
                     );
