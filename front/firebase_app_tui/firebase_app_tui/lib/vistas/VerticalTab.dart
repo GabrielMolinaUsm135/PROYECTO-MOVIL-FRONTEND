@@ -1,5 +1,6 @@
 import 'package:firebase_app_tui/vistas/HomePage.dart';
 import 'package:firebase_app_tui/vistas/VistaPrueba.dart';
+import 'package:firebase_app_tui/vistas/tabs/MonitorView.dart';
 import 'package:flutter/material.dart';
 
 
@@ -73,7 +74,7 @@ class _VerticaltabState extends State<Verticaltab> {
                   if (categoria == 'Monitores') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const VistaPrueba()),
+                      MaterialPageRoute(builder: (_) => const TabMonitor()),
                     );
                   }
                   if (categoria == 'Audifonos') {

@@ -1,6 +1,7 @@
 import 'package:firebase_app_tui/constants/app_colors.dart';
 import 'package:firebase_app_tui/vistas/VerticalTab.dart';
 import 'package:firebase_app_tui/vistas/VistaPrueba.dart';
+import 'package:firebase_app_tui/vistas/carrito/carritoView.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -101,7 +102,7 @@ class HomePage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const VistaPrueba()), //CarritoView
+                MaterialPageRoute(builder: (context) => const CarritoView()), //CarritoView
               );
             },
           ),
