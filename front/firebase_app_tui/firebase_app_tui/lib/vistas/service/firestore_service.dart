@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
-  Stream<QuerySnapshot> teclados() {
-    return FirebaseFirestore.instance.collection('teclados').snapshots();
+  Stream<QuerySnapshot> monitores() {
+    return FirebaseFirestore.instance.collection('monitores').snapshots();
   }
 
   // Future productosAgregar(String marca, String modelo, int precio, int stock) {

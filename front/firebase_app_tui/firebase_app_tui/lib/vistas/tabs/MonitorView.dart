@@ -98,7 +98,7 @@ class TabMonitor extends StatelessWidget {
             const SizedBox(height: 12),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: FirestoreService().teclados(),
+                stream: FirestoreService().monitores(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
