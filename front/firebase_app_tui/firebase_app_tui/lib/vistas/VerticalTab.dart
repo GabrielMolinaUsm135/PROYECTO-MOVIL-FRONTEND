@@ -1,6 +1,9 @@
 import 'package:firebase_app_tui/vistas/HomePage.dart';
 import 'package:firebase_app_tui/vistas/VistaPrueba.dart';
+import 'package:firebase_app_tui/vistas/tabs/AufidonoView.dart';
 import 'package:firebase_app_tui/vistas/tabs/MonitorView.dart';
+import 'package:firebase_app_tui/vistas/tabs/MouseView.dart';
+import 'package:firebase_app_tui/vistas/tabs/TecladoView.dart';
 import 'package:flutter/material.dart';
 
 
@@ -62,13 +65,13 @@ class _VerticaltabState extends State<Verticaltab> {
                   if (categoria == 'Teclados') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const VistaPrueba()),
+                      MaterialPageRoute(builder: (_) => const TabTeclado()),
                     );
                   }
                   if (categoria == 'Mouses') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const VistaPrueba()),
+                      MaterialPageRoute(builder: (_) => const TabMouse()),
                     );
                   }
                   if (categoria == 'Monitores') {
@@ -80,7 +83,7 @@ class _VerticaltabState extends State<Verticaltab> {
                   if (categoria == 'Audifonos') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const VistaPrueba()),
+                      MaterialPageRoute(builder: (_) => const TabAudifono()),
                     );
                   }
                 },
@@ -104,7 +107,7 @@ class _VerticaltabState extends State<Verticaltab> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 5),
-                            child: Text('${Categoria[index]}'),
+                            child: Text(Categoria[index]),
                           ),
                         ),
                       )

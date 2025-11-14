@@ -137,7 +137,7 @@ class HomePage extends StatelessWidget {
                   final formatted = rawPrice
                       .toString()
                       .replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
-                  final price = '\$' + formatted;
+                  final price = '\$$formatted';
                   final discount = '-${20 + index * 5}%';
 
                   return Container(
