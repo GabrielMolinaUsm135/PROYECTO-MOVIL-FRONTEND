@@ -1,6 +1,8 @@
 import 'package:firebase_app_tui/constants/app_colors.dart';
 import 'package:firebase_app_tui/vistas/HomePage.dart';
+import 'package:firebase_app_tui/vistas/service/carrito_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 
 class CarritoView extends StatelessWidget {
@@ -8,6 +10,8 @@ class CarritoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fmt = NumberFormat.currency(decimalDigits: 0, locale: 'es_CL', symbol: '');
+
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
@@ -17,8 +21,8 @@ class CarritoView extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
             );
           },
         ),
@@ -37,251 +41,139 @@ class CarritoView extends StatelessWidget {
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'Tu carro de compras :D',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: textColor,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    color: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      side: BorderSide(color: borderColor),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      body: AnimatedBuilder(
+        animation: CartService.instance,
+        builder: (context, _) {
+          final items = CartService.instance.items;
+          if (items.isEmpty) {
+            return Center(child: Text('Tu carrito está vacío', style: TextStyle(color: textSecondary)));
+          }
+
+          return ListView.separated(
+            padding: const EdgeInsets.all(16),
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemCount: items.length + 1,
+            itemBuilder: (context, index) {
+              if (index == items.length) {
+                final total = CartService.instance.total;
+                return Card(
+                  margin: EdgeInsets.zero,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: backgroundColor,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            Icons.laptop,
-                            size: 40,
-                            color: textSecondary,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    'Marca Del Producto',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Nombre del producto',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: textColor,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: borderColor),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.remove, size: 18),
-                                          onPressed: () {
-                                            // Disminuir unidad del producto xd
-                                          },
-                                          padding: const EdgeInsets.all(4),
-                                          constraints: const BoxConstraints(),
-                                        ),
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 12),
-                                          child: Text(
-                                            '1',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.add, size: 18),
-                                          onPressed: () {
-                                            // Aumentar unidad del producto xd
-                                          },
-                                          padding: const EdgeInsets.all(4),
-                                          constraints: const BoxConstraints(),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        '\$949.990',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: primaryColor,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              TextButton.icon(
-                                onPressed: () {
-                                  //Eliminar del carrito
-                                },
-                                icon: const Icon(Icons.delete_outline, size: 18),
-                                label: const Text('Eliminar'),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Colors.red,
-                                  padding: EdgeInsets.zero,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        const Text('Total de la compra', style: TextStyle(fontWeight: FontWeight.w600)),
+                        Text('\$${fmt.format(total)}', style: const TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
-                  ),
-                  const SizedBox(height: 24),
-                  Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    color: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      side: BorderSide(color: borderColor),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Precio a detalle',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: textSecondary,
-                          ),
+                );
+              }
+
+              final item = items[index];
+              final isNetwork = item.image.startsWith('http://') || item.image.startsWith('https://');
+
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: backgroundColor,
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: isNetwork
+                            ? Image.network(item.image, fit: BoxFit.cover, errorBuilder: (c, e, s) => const Icon(Icons.broken_image))
+                            : Image.asset(item.image, fit: BoxFit.cover, errorBuilder: (c, e, s) => const Icon(Icons.broken_image)),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Text(item.nombre, style: const TextStyle(fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 4),
+                            Text(item.descripcion, style: TextStyle(color: textSecondary), maxLines: 2, overflow: TextOverflow.ellipsis),
+                            const SizedBox(height: 12),
                             Row(
                               children: [
-                                const Text(
-                                  'Total de la compra',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: borderColor),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.remove, size: 18),
+                                        onPressed: () => CartService.instance.disminuirCant(item.id),
+                                        padding: const EdgeInsets.all(4),
+                                        constraints: const BoxConstraints(),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                                        child: Text('${item.quantity}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.add, size: 18),
+                                        onPressed: () => CartService.instance.aumentarCant(item.id),
+                                        padding: const EdgeInsets.all(4),
+                                        constraints: const BoxConstraints(),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(width: 4),
+                                const Spacer(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text('\$${fmt.format(item.precio * item.quantity)}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryColor)),
+                                    Text('\$${fmt.format(item.precio)}', style: TextStyle(color: textSecondary, fontSize: 12)),
+                                  ],
+                                ),
                               ],
                             ),
-                            const Text(
-                              '\$949.990',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            const SizedBox(height: 8),
+                            TextButton.icon(
+                              onPressed: () => CartService.instance.eliminar(item.id),
+                              icon: const Icon(Icons.delete_outline, size: 18),
+                              label: const Text('Eliminar'),
+                              style: TextButton.styleFrom(foregroundColor: Colors.red, padding: EdgeInsets.zero),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
-                      ],
-                    ),
-                  ),
-                  ),
-                  const SizedBox(height: 16),
-                  Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    color: backgroundColor,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(12),
-                      child: SizedBox.shrink(),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-            ),
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  //boton para continuar la compra xd
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                      ),
+                    ],
                   ),
                 ),
-                child: const Text(
-                  'Continuar',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              );
+            },
+          );
+        },
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(color: Colors.white),
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              // Continuar compra
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
+            child: const Text('Continuar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_app_tui/constants/app_colors.dart';
+import 'package:firebase_app_tui/vistas/carrito/carritoView.dart';
+import 'package:firebase_app_tui/vistas/service/carrito_service.dart';
 import 'package:intl/intl.dart';
 
 class DetalleView extends StatelessWidget {
@@ -48,6 +51,51 @@ class DetalleView extends StatelessWidget {
               const SizedBox(height: 12),
               Text(descripcion, style: const TextStyle(fontSize: 16)),
             ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(16),
+        color: Colors.white,
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              final item = CartItem(
+                id: id,
+                nombre: nombre,
+                descripcion: descripcion,
+                precio: precio,
+                image: image,
+              );
+              CartService.instance.anhadir(item);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Producto agregado al carrito'),
+                  action: SnackBarAction(
+                    label: 'Ver',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CarritoView()),
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text(
+              'Agregar al carrito',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       ),
