@@ -3,6 +3,8 @@ import 'package:firebase_app_tui/vistas/service/firestore_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_app_tui/vistas/VerticalTab.dart';
+import 'package:firebase_app_tui/vistas/DetalleView.dart';
 
 class TabMonitor extends StatelessWidget {
   const TabMonitor({super.key});
@@ -62,7 +64,7 @@ class TabMonitor extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                const Expanded(child: SizedBox()),
+                                const Expanded(child: Verticaltab()),
                               ],
                             ),
                           ),
@@ -154,6 +156,20 @@ class TabMonitor extends StatelessWidget {
                             title: Text(nombre.toString()),
                             subtitle: Text(descripcion.toString(), maxLines: 2, overflow: TextOverflow.ellipsis),
                             trailing: Text('\$${_formatCLPFromNum(precio)}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetalleView(
+                                    id: doc.id,
+                                    nombre: nombre.toString(),
+                                    descripcion: descripcion.toString(),
+                                    precio: precio,
+                                    image: image.toString(),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       );

@@ -1,5 +1,4 @@
 import 'package:firebase_app_tui/vistas/HomePage.dart';
-import 'package:firebase_app_tui/vistas/VistaPrueba.dart';
 import 'package:firebase_app_tui/vistas/tabs/AufidonoView.dart';
 import 'package:firebase_app_tui/vistas/tabs/MonitorView.dart';
 import 'package:firebase_app_tui/vistas/tabs/MouseView.dart';
