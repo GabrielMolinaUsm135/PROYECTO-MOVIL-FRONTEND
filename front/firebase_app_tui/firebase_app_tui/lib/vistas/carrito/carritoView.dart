@@ -1,5 +1,7 @@
 import 'package:firebase_app_tui/constants/app_colors.dart';
+import 'package:firebase_app_tui/constants/snackbar.dart';
 import 'package:firebase_app_tui/vistas/HomePage.dart';
+import 'package:firebase_app_tui/vistas/carrito/DatosCarritoView.dart';
 import 'package:firebase_app_tui/vistas/service/carrito_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -128,12 +130,12 @@ class CarritoView extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                const Spacer(),
+                                const SizedBox(width: 8),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Text('\$${fmt.format(item.precio * item.quantity)}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryColor)),
-                                    Text('\$${fmt.format(item.precio)}', style: TextStyle(color: textSecondary, fontSize: 12)),
+                                    Text('\$${fmt.format(item.precio * item.quantity)}', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: primaryColor)),
+                                    Text('\$${fmt.format(item.precio)}', style: TextStyle(color: textSecondary, fontSize: 10)),
                                   ],
                                 ),
                               ],
@@ -156,24 +158,37 @@ class CarritoView extends StatelessWidget {
           );
         },
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.white),
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              // Continuar compra
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryColor,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      bottomNavigationBar: AnimatedBuilder(
+        animation: CartService.instance,
+        builder: (context, _) {
+          final items = CartService.instance.items;
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: Colors.white),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: items.isEmpty
+                    ? () {
+                        mostrarSnackbar(context, 'Debes agregar productos al carrito para continuar');
+                      }
+                    : () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const DatosCarritoView()),
+                        );
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: items.isEmpty ? Colors.grey : primaryColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                child: const Text('Continuar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              ),
             ),
-            child: const Text('Continuar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
