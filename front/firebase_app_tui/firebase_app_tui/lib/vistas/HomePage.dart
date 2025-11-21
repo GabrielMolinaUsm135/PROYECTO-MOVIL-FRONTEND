@@ -1,7 +1,9 @@
 import 'package:firebase_app_tui/constants/app_colors.dart';
 import 'package:firebase_app_tui/vistas/VerticalTab.dart';
 import 'package:firebase_app_tui/vistas/carrito/carritoView.dart';
+import 'package:firebase_app_tui/vistas/service/firestore_service.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_app_tui/vistas/DetalleView.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -125,102 +127,172 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             SizedBox(
-              height: 180,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  final name = 'Producto ${index + 1}';
-                  final rawPrice = 69990 - index * 5000;
-                  final formatted = rawPrice
-                      .toString()
-                      .replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
-                  final price = '\$$formatted';
-                  final discount = '-${20 + index * 5}%';
+              height: 190,
+              child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: () async {
+                  // Fetch first snapshot from each collection and merge
+                  final futures = [
+                    FirestoreService().teclados().first,
+                    FirestoreService().mouse().first,
+                    FirestoreService().monitores().first,
+                    FirestoreService().audifonos().first,
+                  ];
 
-                  return Container(
-                    width: 150,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(
-                          children: [
-                            Container(
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: backgroundColor,
-                                borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.devices,
-                                  size: 50,
-                                  color: textSecondary,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              top: 8,
-                              left: 8,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: primaryColor,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  discount,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
+                  final results = await Future.wait(futures);
+                  final items = <Map<String, dynamic>>[];
+                  for (var qs in results) {
+                    for (var d in qs.docs) {
+                      final data = d.data() as Map<String, dynamic>;
+                      items.add({
+                        'id': d.id,
+                        'nombre': data['nombre'] ?? '',
+                        'descripcion': data['descripcion'] ?? '',
+                        'precio': data['precio'] ?? 0,
+                        'image': data['imageAsset'] ?? '',
+                      });
+                    }
+                  }
+                  items.shuffle();
+                  return items;
+                }(),
+                builder: (context, snap) {
+                  if (!snap.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  final list = snap.data!;
+                  final count = list.length >= 4 ? 4 : list.length;
+
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    itemCount: count,
+                    itemBuilder: (context, index) {
+                      final item = list[index];
+                      final name = item['nombre'] ?? 'Producto';
+                      final precioNum = (item['precio'] ?? 0) as num;
+                      final formatted = precioNum.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
+                      final price = '\$$formatted';
+                      final discount = '-${10 + (index * 5)}%';
+
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetalleView(
+                                id: item['id'] ?? '',
+                                nombre: item['nombre'] ?? 'Producto',
+                                descripcion: item['descripcion'] ?? '',
+                                precio: (item['precio'] ?? 0) as num,
+                                image: item['image'] ?? '',
                               ),
                             ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
+                          );
+                        },
+                        child: Container(
+                          width: 150,
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.08),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                name,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: textColor,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                              Stack(
+                                children: [
+                                  Container(
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      color: backgroundColor,
+                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                                        child: Image.network(
+                                          item['image'] ?? '',
+                                          fit: BoxFit.contain,
+                                          width: double.infinity,
+                                          height: 84,
+                                          errorBuilder: (context, error, stackTrace) => const Center(
+                                            child: Icon(
+                                              Icons.broken_image,
+                                              size: 50,
+                                              color: textSecondary,
+                                            ),
+                                          ),
+                                          loadingBuilder: (context, child, loadingProgress) {
+                                            if (loadingProgress == null) return child;
+                                            return const Center(
+                                              child: CircularProgressIndicator(),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 8,
+                                    left: 8,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: primaryColor,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Text(
+                                        discount,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                price,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: primaryColor,
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      name,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: textColor,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      price,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: primaryColor,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   );
                 },
               ),
@@ -238,108 +310,155 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.7,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemCount: 4,
-              itemBuilder: (context, index) {
-                final products = [
-                  {'name': 'Notebook Gamer', 'price': '\$1.299.990', 'icon': Icons.laptop},
-                  {'name': 'Monitor 27"', 'price': '\$249.990', 'icon': Icons.desktop_windows},
-                  {'name': 'Mouse Gaming', 'price': '\$39.990', 'icon': Icons.mouse},
-                  {'name': 'Teclado Mecánico', 'price': '\$89.990', 'icon': Icons.keyboard},
+            FutureBuilder<List<Map<String, dynamic>>>(
+              future: () async {
+                // Reuse the same merged list as above (refetch for simplicity)
+                final futures = [
+                  FirestoreService().teclados().first,
+                  FirestoreService().mouse().first,
+                  FirestoreService().monitores().first,
+                  FirestoreService().audifonos().first,
                 ];
 
-                final name = products[index]['name'] as String;
-                final price = products[index]['price'] as String;
-                final icon = products[index]['icon'] as IconData;
+                final results = await Future.wait(futures);
+                final items = <Map<String, dynamic>>[];
+                for (var qs in results) {
+                  for (var d in qs.docs) {
+                    final data = d.data() as Map<String, dynamic>;
+                    items.add({
+                      'id': d.id,
+                      'nombre': data['nombre'] ?? '',
+                      'descripcion': data['descripcion'] ?? '',
+                      'precio': data['precio'] ?? 0,
+                      'image': data['imageAsset'] ?? '',
+                    });
+                  }
+                }
+                items.shuffle();
+                return items;
+              }(),
+              builder: (context, snap) {
+                if (!snap.hasData) return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
 
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: borderColor),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                final list = snap.data!;
+                final count = list.length >= 4 ? 4 : list.length;
+
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.7,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: backgroundColor,
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
-                          ),
-                          child: Center(
-                            child: Icon(
-                              icon,
-                              size: 60,
-                              color: textSecondary,
+                  itemCount: count,
+                  itemBuilder: (context, index) {
+                    final item = list[index];
+                    final name = item['nombre'] as String? ?? 'Producto';
+                    final precioNum = (item['precio'] ?? 0) as num;
+                    final formatted = precioNum.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
+                    final price = '\$$formatted';
+
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetalleView(
+                              id: item['id'] ?? '',
+                              nombre: item['nombre'] ?? 'Producto',
+                              descripcion: item['descripcion'] ?? '',
+                              precio: (item['precio'] ?? 0) as num,
+                              image: item['image'] ?? '',
                             ),
                           ),
-                        ),
+                        );
+                      },
+                      child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: borderColor),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              name,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: textColor,
-                                fontWeight: FontWeight.w500,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: backgroundColor,
+                                borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
                               ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              price,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: primaryColor,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: accentColor,
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 8),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Center(
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                                    child: Image.network(
+                                      item['image'] ?? '',
+                                      fit: BoxFit.contain,
+                                      height: 120,
+                                      errorBuilder: (context, error, stackTrace) => const Center(
+                                        child: Icon(
+                                          Icons.broken_image,
+                                          size: 60,
+                                          color: textSecondary,
+                                        ),
+                                      ),
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) return child;
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
-                                child: const Text(
-                                  'Agregar',
-                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                                ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  name,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: textColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  price,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: primaryColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  );
+                },
                 );
               },
             ),

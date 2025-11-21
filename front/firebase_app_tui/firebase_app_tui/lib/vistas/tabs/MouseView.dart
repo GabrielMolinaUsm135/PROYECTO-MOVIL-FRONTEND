@@ -120,41 +120,21 @@ class TabMouse extends StatelessWidget {
                       final precio = data['precio'] ?? 0;
                       final image = data['imageAsset'] ?? '';
 
-                      Widget leading;
-                      if (image is String && _isNetworkUrl(image)) {
-                        leading = ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: Image.network(image, width: 64, height: 64, fit: BoxFit.cover, errorBuilder: (c, e, s) => Container(width:64, height:64, color: Colors.grey[200], child: const Icon(Icons.broken_image))),
-                        );
-                      } else {
-                        leading = ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: Image.asset(image.toString(), width: 64, height: 64, fit: BoxFit.cover, errorBuilder: (c, e, s) => Container(width:64, height:64, color: Colors.grey[200], child: const Icon(Icons.broken_image))),
-                        );
-                      }
-
-                      return Dismissible(
-                        key: ValueKey(doc.id),
-                        // Only allow swipe from start to end (left-to-right)
-                        direction: DismissDirection.startToEnd,
-                        background: Container(
-                          color: Colors.blueAccent,
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.only(left: 16),
-                          child: const Icon(Icons.shopping_cart, color: Colors.white),
-                        ),
-                        confirmDismiss: (direction) async {
-                          // Placeholder: send item to shopping cart.
-                          // Implement cart logic here later. The 'direction'
-                          // parameter indicates the swipe direction.
-                          // Example: await CartService.add(doc.id);
-                          return false; // keep the item in the list for now
-                        },
-                        child: Card(
+                      // render inline leading and larger card (no dismissible)
+                      return Card(
+                        child: SizedBox(
+                          height: 140,
                           child: ListTile(
-                            leading: leading,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                            minLeadingWidth: 120,
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: (image is String && _isNetworkUrl(image))
+                                  ? Image.network(image, width: 120, height: 120, fit: BoxFit.contain, errorBuilder: (c, e, s) => Container(width:120, height:120, color: Colors.grey[200], child: const Icon(Icons.broken_image)))
+                                  : Image.asset(image.toString(), width: 120, height: 120, fit: BoxFit.contain, errorBuilder: (c, e, s) => Container(width:120, height:120, color: Colors.grey[200], child: const Icon(Icons.broken_image))),
+                            ),
                             title: Text(nombre.toString()),
-                            subtitle: Text(descripcion.toString(), maxLines: 2, overflow: TextOverflow.ellipsis),
+                            subtitle: Text(descripcion.toString(), maxLines: 3, overflow: TextOverflow.ellipsis),
                             trailing: Text('\$${_formatCLPFromNum(precio)}', style: const TextStyle(fontWeight: FontWeight.bold)),
                             onTap: () {
                               Navigator.push(
