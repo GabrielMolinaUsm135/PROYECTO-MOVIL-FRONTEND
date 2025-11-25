@@ -4,7 +4,37 @@ import 'package:firebase_app_tui/vistas/carrito/carritoView.dart';
 import 'package:firebase_app_tui/vistas/service/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_app_tui/vistas/DetalleView.dart';
+import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_app_tui/vistas/login/login_page.dart';
 // flutter/foundation not needed here
+
+Future<void> _confirmAndLogout(BuildContext context) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Cerrar sesión'),
+      content: const Text('¿Estás seguro que quieres cerrar sesión?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: const Text('Cerrar sesión', style: TextStyle(color: Colors.red)),
+        ),
+      ],
+    ),
+  );
+
+  if (confirmed == true) {
+    try {
+      await FirebaseAuth.instance.signOut();
+    } catch (_) {}
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginPage()));
+  }
+}
 
 class ProductSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
   ProductSearchDelegate() : super(searchFieldLabel: 'Buscar productos');
@@ -138,10 +168,9 @@ class HomePage extends StatelessWidget {
                                   actions: [
                                     IconButton(
                                       icon: const Icon(Icons.logout),
-                                      onPressed: () {
+                                      onPressed: () async {
                                         Navigator.pop(context);
-                                        Navigator.pushNamedAndRemoveUntil(
-                                            context, '/', (route) => false);
+                                        await _confirmAndLogout(context);
                                       },
                                     ),
                                     IconButton(
@@ -217,6 +246,10 @@ class HomePage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const CarritoView()), //CarritoView
               );
             },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white),
+            onPressed: () => _confirmAndLogout(context),
           ),
         ],
       ),
@@ -448,11 +481,13 @@ class HomePage extends StatelessWidget {
                 items.shuffle();
                 return items;
               }(),
-              builder: (context, snap) {
+                builder: (context, snap) {
                 if (!snap.hasData) return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
 
                 final list = snap.data!;
-                final count = list.length >= 4 ? 4 : list.length;
+                // pick a random number between 4 and 8 (inclusive), capped by available items
+                final desired = min(list.length, 4 + Random().nextInt(5)); // 4..8
+                final count = desired;
 
                 return GridView.builder(
                   shrinkWrap: true,
