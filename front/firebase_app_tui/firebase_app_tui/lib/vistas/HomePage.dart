@@ -4,6 +4,98 @@ import 'package:firebase_app_tui/vistas/carrito/carritoView.dart';
 import 'package:firebase_app_tui/vistas/service/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_app_tui/vistas/DetalleView.dart';
+// flutter/foundation not needed here
+
+class ProductSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
+  ProductSearchDelegate() : super(searchFieldLabel: 'Buscar productos');
+
+  Future<List<Map<String, dynamic>>> _search(String query) async {
+    if (query.trim().isEmpty) return [];
+    final futures = [
+      FirestoreService().teclados().first,
+      FirestoreService().mouse().first,
+      FirestoreService().monitores().first,
+      FirestoreService().audifonos().first,
+    ];
+
+    final results = await Future.wait(futures);
+    final items = <Map<String, dynamic>>[];
+    for (var qs in results) {
+      for (var d in qs.docs) {
+        final data = d.data() as Map<String, dynamic>;
+        final nombre = (data['nombre'] ?? '').toString();
+        if (nombre.toLowerCase().contains(query.toLowerCase())) {
+          items.add({
+            'id': d.id,
+            'nombre': nombre,
+            'descripcion': data['descripcion'] ?? '',
+            'precio': data['precio'] ?? 0,
+            'image': data['imageAsset'] ?? '',
+          });
+        }
+      }
+    }
+    return items;
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: _search(query),
+      builder: (context, snap) {
+        if (snap.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+        final list = snap.data ?? [];
+        if (list.isEmpty) return const Center(child: Text('No se encontraron productos'));
+        return ListView.separated(
+          itemCount: list.length,
+          separatorBuilder: (_, __) => const Divider(height: 1),
+          itemBuilder: (context, index) {
+            final item = list[index];
+            final precioNum = (item['precio'] ?? 0) as num;
+            final formatted = precioNum.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
+            return ListTile(
+              leading: (item['image'] ?? '').toString().isNotEmpty
+                  ? Image.network(item['image'], width: 56, height: 56, fit: BoxFit.cover, errorBuilder: (c, e, s) => const Icon(Icons.broken_image))
+                  : const Icon(Icons.image_not_supported),
+              title: Text(item['nombre'] ?? 'Producto'),
+              subtitle: Text('\$${formatted}'),
+              onTap: () {
+                close(context, item);
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    if (query.isEmpty) {
+      return const Center(child: Text('Escribe el nombre del producto')); 
+    }
+    return buildResults(context);
+  }
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      if (query.isNotEmpty)
+        IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () => query = '',
+        ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () => close(context, null),
+    );
+  }
+}
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -96,7 +188,26 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {},
+            onPressed: () async {
+              final Map<String, dynamic>? res = await showSearch<Map<String, dynamic>?>(
+                context: context,
+                delegate: ProductSearchDelegate(),
+              );
+              if (res != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetalleView(
+                      id: res['id'] ?? '',
+                      nombre: res['nombre'] ?? 'Producto',
+                      descripcion: res['descripcion'] ?? '',
+                      precio: (res['precio'] ?? 0) as num,
+                      image: res['image'] ?? '',
+                    ),
+                  ),
+                );
+              }
+            },
           ),
           IconButton(
             icon: const Icon(Icons.shopping_cart, color: Colors.white),
