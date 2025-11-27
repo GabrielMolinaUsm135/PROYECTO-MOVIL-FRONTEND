@@ -4,6 +4,128 @@ import 'package:firebase_app_tui/vistas/carrito/carritoView.dart';
 import 'package:firebase_app_tui/vistas/service/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_app_tui/vistas/DetalleView.dart';
+import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_app_tui/vistas/login/login_page.dart';
+// flutter/foundation not needed here
+
+Future<void> _confirmAndLogout(BuildContext context) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Cerrar sesión'),
+      content: const Text('¿Estás seguro que quieres cerrar sesión?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: const Text('Cerrar sesión', style: TextStyle(color: Colors.red)),
+        ),
+      ],
+    ),
+  );
+
+  if (confirmed == true) {
+    try {
+      await FirebaseAuth.instance.signOut();
+    } catch (_) {}
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginPage()));
+  }
+}
+
+class ProductSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
+  ProductSearchDelegate() : super(searchFieldLabel: 'Buscar productos');
+
+  Future<List<Map<String, dynamic>>> _search(String query) async {
+    if (query.trim().isEmpty) return [];
+    final futures = [
+      FirestoreService().teclados().first,
+      FirestoreService().mouse().first,
+      FirestoreService().monitores().first,
+      FirestoreService().audifonos().first,
+    ];
+
+    final results = await Future.wait(futures);
+    final items = <Map<String, dynamic>>[];
+    for (var qs in results) {
+      for (var d in qs.docs) {
+        final data = d.data() as Map<String, dynamic>;
+        final nombre = (data['nombre'] ?? '').toString();
+        if (nombre.toLowerCase().contains(query.toLowerCase())) {
+          items.add({
+            'id': d.id,
+            'nombre': nombre,
+            'descripcion': data['descripcion'] ?? '',
+            'precio': data['precio'] ?? 0,
+            'image': data['imageAsset'] ?? '',
+          });
+        }
+      }
+    }
+    return items;
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: _search(query),
+      builder: (context, snap) {
+        if (snap.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+        final list = snap.data ?? [];
+        if (list.isEmpty) return const Center(child: Text('No se encontraron productos'));
+        return ListView.separated(
+          itemCount: list.length,
+          separatorBuilder: (_, __) => const Divider(height: 1),
+          itemBuilder: (context, index) {
+            final item = list[index];
+            final precioNum = (item['precio'] ?? 0) as num;
+            final formatted = precioNum.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
+            return ListTile(
+              leading: (item['image'] ?? '').toString().isNotEmpty
+                  ? Image.network(item['image'], width: 56, height: 56, fit: BoxFit.cover, errorBuilder: (c, e, s) => const Icon(Icons.broken_image))
+                  : const Icon(Icons.image_not_supported),
+              title: Text(item['nombre'] ?? 'Producto'),
+              subtitle: Text('\$${formatted}'),
+              onTap: () {
+                close(context, item);
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    if (query.isEmpty) {
+      return const Center(child: Text('Escribe el nombre del producto')); 
+    }
+    return buildResults(context);
+  }
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      if (query.isNotEmpty)
+        IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () => query = '',
+        ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () => close(context, null),
+    );
+  }
+}
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -46,10 +168,9 @@ class HomePage extends StatelessWidget {
                                   actions: [
                                     IconButton(
                                       icon: const Icon(Icons.logout),
-                                      onPressed: () {
+                                      onPressed: () async {
                                         Navigator.pop(context);
-                                        Navigator.pushNamedAndRemoveUntil(
-                                            context, '/', (route) => false);
+                                        await _confirmAndLogout(context);
                                       },
                                     ),
                                     IconButton(
@@ -96,7 +217,26 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {},
+            onPressed: () async {
+              final Map<String, dynamic>? res = await showSearch<Map<String, dynamic>?>(
+                context: context,
+                delegate: ProductSearchDelegate(),
+              );
+              if (res != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetalleView(
+                      id: res['id'] ?? '',
+                      nombre: res['nombre'] ?? 'Producto',
+                      descripcion: res['descripcion'] ?? '',
+                      precio: (res['precio'] ?? 0) as num,
+                      image: res['image'] ?? '',
+                    ),
+                  ),
+                );
+              }
+            },
           ),
           IconButton(
             icon: const Icon(Icons.shopping_cart, color: Colors.white),
@@ -106,6 +246,10 @@ class HomePage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const CarritoView()), //CarritoView
               );
             },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white),
+            onPressed: () => _confirmAndLogout(context),
           ),
         ],
       ),
@@ -337,11 +481,13 @@ class HomePage extends StatelessWidget {
                 items.shuffle();
                 return items;
               }(),
-              builder: (context, snap) {
+                builder: (context, snap) {
                 if (!snap.hasData) return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
 
                 final list = snap.data!;
-                final count = list.length >= 4 ? 4 : list.length;
+                // pick a random number between 4 and 8 (inclusive), capped by available items
+                final desired = min(list.length, 4 + Random().nextInt(5)); // 4..8
+                final count = desired;
 
                 return GridView.builder(
                   shrinkWrap: true,
