@@ -7,7 +7,6 @@ import 'package:firebase_app_tui/vistas/DetalleView.dart';
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_app_tui/vistas/login/login_page.dart';
-// flutter/foundation not needed here
 
 Future<void> _confirmAndLogout(BuildContext context) async {
   final confirmed = await showDialog<bool>(
@@ -163,18 +162,20 @@ class HomePage extends StatelessWidget {
                               children: [
                                 AppBar(
                                   backgroundColor: primaryColor,
+                                  foregroundColor: textSecondary,
                                   title: const Text('Menú'),
                                   automaticallyImplyLeading: false,
                                   actions: [
                                     IconButton(
                                       icon: const Icon(Icons.logout),
+                                      color: textSecondary,
                                       onPressed: () async {
-                                        Navigator.pop(context);
                                         await _confirmAndLogout(context);
                                       },
                                     ),
                                     IconButton(
                                       icon: const Icon(Icons.close),
+                                      color: textSecondary,
                                       onPressed: () => Navigator.pop(context),
                                     ),
                                   ],
@@ -456,7 +457,6 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             FutureBuilder<List<Map<String, dynamic>>>(
               future: () async {
-                // Reuse the same merged list as above (refetch for simplicity)
                 final futures = [
                   FirestoreService().teclados().first,
                   FirestoreService().mouse().first,

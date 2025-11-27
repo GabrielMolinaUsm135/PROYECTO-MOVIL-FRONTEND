@@ -48,6 +48,7 @@ class TabMonitor extends StatelessWidget {
                               children: [
                                 AppBar(
                                   backgroundColor: primaryColor,
+                                  foregroundColor: textSecondary,
                                   title: const Text('Menú'),
                                   automaticallyImplyLeading: false,
                                   actions: [
@@ -123,35 +124,37 @@ class TabMonitor extends StatelessWidget {
                       // leading rendered inline below (larger card layout)
 
                       return Card(
-                        child: SizedBox(
-                          height: 140,
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                            minLeadingWidth: 120,
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: (image is String && _isNetworkUrl(image))
-                                  ? Image.network(image, width: 120, height: 120, fit: BoxFit.contain, errorBuilder: (c, e, s) => Container(width:120, height:120, color: Colors.grey[200], child: const Icon(Icons.broken_image)))
-                                  : Image.asset(image.toString(), width: 120, height: 120, fit: BoxFit.contain, errorBuilder: (c, e, s) => Container(width:120, height:120, color: Colors.grey[200], child: const Icon(Icons.broken_image))),
-                            ),
-                            title: Text(nombre.toString()),
-                            subtitle: Text(descripcion.toString(), maxLines: 3, overflow: TextOverflow.ellipsis),
-                            trailing: Text('\$${_formatCLPFromNum(precio)}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetalleView(
-                                    id: doc.id,
-                                    nombre: nombre.toString(),
-                                    descripcion: descripcion.toString(),
-                                    precio: precio,
-                                    image: image.toString(),
-                                  ),
-                                ),
-                              );
-                            },
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                          minLeadingWidth: 100,
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: (image is String && _isNetworkUrl(image))
+                                ? Image.network(image, width: 100, height: 100, fit: BoxFit.contain, errorBuilder: (c, e, s) => Container(width:100, height:100, color: Colors.grey[200], child: const Icon(Icons.broken_image)))
+                                : Image.asset(image.toString(), width: 100, height: 100, fit: BoxFit.contain, errorBuilder: (c, e, s) => Container(width:100, height:100, color: Colors.grey[200], child: const Icon(Icons.broken_image))),
                           ),
+                          title: Text(nombre.toString(), maxLines: 1, overflow: TextOverflow.ellipsis),
+                          subtitle: Text(
+                            descripcion.toString(),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                          ),
+                          trailing: Text('\$${_formatCLPFromNum(precio)}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetalleView(
+                                  id: doc.id,
+                                  nombre: nombre.toString(),
+                                  descripcion: descripcion.toString(),
+                                  precio: precio,
+                                  image: image.toString(),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },

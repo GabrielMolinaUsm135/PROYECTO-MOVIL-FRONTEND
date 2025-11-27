@@ -100,13 +100,13 @@ class CarritoView extends StatelessWidget {
                           children: [
                             Text(item.nombre, style: const TextStyle(fontWeight: FontWeight.bold)),
                             const SizedBox(height: 4),
-                            Text(item.descripcion, style: TextStyle(color: textSecondary), maxLines: 2, overflow: TextOverflow.ellipsis),
+                            Text(item.descripcion, style: TextStyle(color: textColor), maxLines: 2, overflow: TextOverflow.ellipsis),
                             const SizedBox(height: 12),
                             Row(
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: borderColor),
+                                    border: Border.all(color: textColor),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Row(
@@ -134,8 +134,8 @@ class CarritoView extends StatelessWidget {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Text('\$${fmt.format(item.precio * item.quantity)}', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: primaryColor)),
-                                    Text('\$${fmt.format(item.precio)}', style: TextStyle(color: textSecondary, fontSize: 10)),
+                                    Text('\$${fmt.format(item.precio * item.quantity)}', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: textColor)),
+                                    Text('\$${fmt.format(item.precio)}', style: TextStyle(color: textColor, fontSize: 10)),
                                   ],
                                 ),
                               ],

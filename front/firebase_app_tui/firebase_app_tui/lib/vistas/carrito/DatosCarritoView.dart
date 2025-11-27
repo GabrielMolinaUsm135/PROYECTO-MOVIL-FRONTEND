@@ -69,7 +69,7 @@ class _DatosCarritoViewState extends State<DatosCarritoView> {
       appBar: AppBar(
         backgroundColor: primaryColor,
         leading: IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)),
-        title: const Row(children: [Icon(Icons.store, color: Colors.white), SizedBox(width: 8), Text('Apurate mama', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20))]),
+        title: const Row(children: [Icon(Icons.store, color: Colors.white), SizedBox(width: 8), Text('Datos Personales', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20))]),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -80,7 +80,7 @@ class _DatosCarritoViewState extends State<DatosCarritoView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Ingresa tus datos para generar el comprobante de pago y realizar el seguimiento de la compra', style: TextStyle(color: textSecondary, fontSize: 14)),
+                    const Text('Ingresa tus datos para generar el comprobante de pago y realizar el seguimiento de la compra', style: TextStyle(color: textColor, fontSize: 14)),
                     const SizedBox(height: 20),
                     Card(
                       child: Padding(

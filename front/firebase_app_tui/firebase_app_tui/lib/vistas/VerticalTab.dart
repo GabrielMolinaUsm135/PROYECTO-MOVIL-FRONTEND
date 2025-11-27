@@ -93,7 +93,7 @@ class _VerticaltabState extends State<Verticaltab> {
                         duration: const Duration(milliseconds: 500),
                         height: (selectedIndex == index) ? 50 : 0,
                         width: 5,
-                        color: Colors.orange,
+                        color: Colors.purple,
                       ),
                       Expanded(
                         child: AnimatedContainer(

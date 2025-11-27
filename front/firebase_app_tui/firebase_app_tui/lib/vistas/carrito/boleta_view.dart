@@ -86,11 +86,11 @@ class BoletaView extends StatelessWidget {
                 
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(children: [SizedBox(width: 120, child: Text('Fecha y Hora:', style: TextStyle(color: textSecondary, fontSize: 13))), Expanded(child: Text(fechaHora, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
+                  child: Row(children: [SizedBox(width: 120, child: Text('Fecha y Hora:', style: TextStyle(color: textColor, fontSize: 13))), Expanded(child: Text(fechaHora, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(children: [SizedBox(width: 120, child: Text('Método de Pago:', style: TextStyle(color: textSecondary, fontSize: 13))), Expanded(child: Text(metodoPago, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
+                  child: Row(children: [SizedBox(width: 120, child: Text('Método de Pago:', style: TextStyle(color: textColor, fontSize: 13))), Expanded(child: Text(metodoPago, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
                 ),
                 
                 const SizedBox(height: 20),
@@ -101,23 +101,23 @@ class BoletaView extends StatelessWidget {
                 const SizedBox(height: 12),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(children: [SizedBox(width: 120, child: Text('Nombre:', style: TextStyle(color: textSecondary, fontSize: 13))), Expanded(child: Text(nombre, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
+                  child: Row(children: [SizedBox(width: 120, child: Text('Nombre:', style: TextStyle(color: textColor, fontSize: 13))), Expanded(child: Text(nombre, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(children: [SizedBox(width: 120, child: Text('RUT:', style: TextStyle(color: textSecondary, fontSize: 13))), Expanded(child: Text(rut, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
+                  child: Row(children: [SizedBox(width: 120, child: Text('RUT:', style: TextStyle(color: textColor  , fontSize: 13))), Expanded(child: Text(rut, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(children: [SizedBox(width: 120, child: Text('Dirección:', style: TextStyle(color: textSecondary, fontSize: 13))), Expanded(child: Text(direccion, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
+                  child: Row(children: [SizedBox(width: 120, child: Text('Dirección:', style: TextStyle(color: textColor, fontSize: 13))), Expanded(child: Text(direccion, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(children: [SizedBox(width: 120, child: Text('Teléfono:', style: TextStyle(color: textSecondary, fontSize: 13))), Expanded(child: Text('+569 $telefono', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
+                  child: Row(children: [SizedBox(width: 120, child: Text('Teléfono:', style: TextStyle(color: textColor , fontSize: 13))), Expanded(child: Text('+569 $telefono', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(children: [SizedBox(width: 120, child: Text('Email:', style: TextStyle(color: textSecondary, fontSize: 13))), Expanded(child: Text(email, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
+                  child: Row(children: [SizedBox(width: 120, child: Text('Email:', style: TextStyle(color: textColor, fontSize: 13))), Expanded(child: Text(email, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)))]),
                 ),
                 
                 const SizedBox(height: 20),
@@ -139,7 +139,7 @@ class BoletaView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(item.nombre, style: const TextStyle(fontWeight: FontWeight.w600)),
-                            Text('Cant: ${item.quantity}', style: TextStyle(fontSize: 12, color: textSecondary)),
+                            Text('Cant: ${item.quantity}', style: TextStyle(fontSize: 12, color: textColor)),
                           ],
                         ),
                       ),

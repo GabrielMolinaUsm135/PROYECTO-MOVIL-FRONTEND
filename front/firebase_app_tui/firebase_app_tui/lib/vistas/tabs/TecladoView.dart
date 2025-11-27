@@ -1,8 +1,8 @@
 import 'package:firebase_app_tui/constants/app_colors.dart';
-import 'package:firebase_app_tui/vistas/DetalleView.dart';
 import 'package:firebase_app_tui/vistas/service/firestore_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app_tui/vistas/VerticalTab.dart';
+import 'package:firebase_app_tui/vistas/DetalleView.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -10,9 +10,7 @@ class TabTeclado extends StatelessWidget {
   const TabTeclado({super.key});
 
   static final NumberFormat _fPrecio = NumberFormat.currency(decimalDigits: 0, locale: 'es_CL', symbol: '');
-
   static String _formatCLPFromNum(num value) => _fPrecio.format(value);
-
   static bool _isNetworkUrl(String s) => s.startsWith('http://') || s.startsWith('https://');
 
   @override
@@ -48,6 +46,7 @@ class TabTeclado extends StatelessWidget {
                               children: [
                                 AppBar(
                                   backgroundColor: primaryColor,
+                                  foregroundColor: textSecondary,
                                   title: const Text('Menú'),
                                   automaticallyImplyLeading: false,
                                   actions: [
@@ -105,10 +104,8 @@ class TabTeclado extends StatelessWidget {
                   if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
-
                   final docs = snapshot.data!.docs;
                   if (docs.isEmpty) return const Center(child: Text('No hay productos'));
-
                   return ListView.separated(
                     separatorBuilder: (_, __) => const Divider(height: 1),
                     itemCount: docs.length,
@@ -119,38 +116,38 @@ class TabTeclado extends StatelessWidget {
                       final descripcion = data['descripcion'] ?? '';
                       final precio = data['precio'] ?? 0;
                       final image = data['imageAsset'] ?? '';
-
-                      // render inline leading and larger card (no dismissible)
                       return Card(
-                        child: SizedBox(
-                          height: 140,
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                            minLeadingWidth: 120,
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: (image is String && _isNetworkUrl(image))
-                                  ? Image.network(image, width: 120, height: 120, fit: BoxFit.contain, errorBuilder: (c, e, s) => Container(width:120, height:120, color: Colors.grey[200], child: const Icon(Icons.broken_image)))
-                                  : Image.asset(image.toString(), width: 120, height: 120, fit: BoxFit.contain, errorBuilder: (c, e, s) => Container(width:120, height:120, color: Colors.grey[200], child: const Icon(Icons.broken_image))),
-                            ),
-                            title: Text(nombre.toString()),
-                            subtitle: Text(descripcion.toString(), maxLines: 3, overflow: TextOverflow.ellipsis),
-                            trailing: Text('\$${_formatCLPFromNum(precio)}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetalleView(
-                                    id: doc.id,
-                                    nombre: nombre.toString(),
-                                    descripcion: descripcion.toString(),
-                                    precio: precio,
-                                    image: image.toString(),
-                                  ),
-                                ),
-                              );
-                            },
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                          minLeadingWidth: 100,
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: (image is String && _isNetworkUrl(image))
+                                ? Image.network(image, width: 100, height: 100, fit: BoxFit.contain, errorBuilder: (c, e, s) => Container(width:100, height:100, color: Colors.grey[200], child: const Icon(Icons.broken_image)))
+                                : Image.asset(image.toString(), width: 100, height: 100, fit: BoxFit.contain, errorBuilder: (c, e, s) => Container(width:100, height:100, color: Colors.grey[200], child: const Icon(Icons.broken_image))),
                           ),
+                          title: Text(nombre.toString(), maxLines: 1, overflow: TextOverflow.ellipsis),
+                          subtitle: Text(
+                            descripcion.toString(),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                          ),
+                          trailing: Text('\$${_formatCLPFromNum(precio)}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetalleView(
+                                  id: doc.id,
+                                  nombre: nombre.toString(),
+                                  descripcion: descripcion.toString(),
+                                  precio: precio,
+                                  image: image.toString(),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },

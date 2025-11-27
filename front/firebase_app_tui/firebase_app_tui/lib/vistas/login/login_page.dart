@@ -130,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                                   _signIn();
                                 }
                               },
-                              style: ElevatedButton.styleFrom(backgroundColor: primaryColor),
+                              style: ElevatedButton.styleFrom(backgroundColor: primaryColor, foregroundColor: textSecondary),
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 12.0),
                                 child: Text('Entrar'),
