@@ -1,0 +1,16 @@
+import 'package:flutter/material.dart';
+
+class VistaPrueba extends StatelessWidget {
+  const VistaPrueba({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text(
+          'Vista de Prueba',          
+        ),
+      ),
+    );
+  }
+}
