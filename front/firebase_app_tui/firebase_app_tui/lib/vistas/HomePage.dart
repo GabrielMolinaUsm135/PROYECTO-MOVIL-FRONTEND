@@ -7,6 +7,7 @@ import 'package:firebase_app_tui/vistas/DetalleView.dart';
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_app_tui/vistas/login/login_page.dart';
+import 'package:firebase_app_tui/vistas/DetalleOffer.dart';
 
 Future<void> _confirmAndLogout(BuildContext context) async {
   final confirmed = await showDialog<bool>(
@@ -316,20 +317,27 @@ class HomePage extends StatelessWidget {
                       final item = list[index];
                       final name = item['nombre'] ?? 'Producto';
                       final precioNum = (item['precio'] ?? 0) as num;
-                      final formatted = precioNum.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
-                      final price = '\$$formatted';
-                      final discount = '-${10 + (index * 5)}%';
+                      // calcular porcentaje de descuento y precio final
+                      final discountPercent = 10 + (index * 5);
+                      final discountedNum = (precioNum * (100 - discountPercent) / 100).toDouble();
+                      final formattedDiscounted = discountedNum.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
+                      final price = '\$$formattedDiscounted';
+                      final discount = '-${discountPercent}%';
+                      // precio original formateado para mostrar tachado
+                      final formattedOriginal = precioNum.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
+                      final originalPrice = '\$$formattedOriginal';
 
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetalleView(
+                              builder: (context) => OfferView(
                                 id: item['id'] ?? '',
                                 nombre: item['nombre'] ?? 'Producto',
                                 descripcion: item['descripcion'] ?? '',
-                                precio: (item['precio'] ?? 0) as num,
+                                    precio: discountedNum,
+                                    precioOriginal: precioNum,
                                 image: item['image'] ?? '',
                               ),
                             ),
@@ -415,20 +423,34 @@ class HomePage extends StatelessWidget {
                                     Text(
                                       name,
                                       style: const TextStyle(
-                                        fontSize: 13,
+                                        fontSize: 11,
                                         color: textColor,
                                       ),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     const SizedBox(height: 4),
-                                    Text(
-                                      price,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: primaryColor,
-                                      ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          price,
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold,
+                                            color: primaryColor,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          originalPrice,
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.grey,
+                                            decoration: TextDecoration.lineThrough,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
